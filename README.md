@@ -1,7 +1,3 @@
-Perfeito, Gabriel! Aqui está um **README completo, pronto para GitHub**, documentando teu projeto com **PySide6** e **PyInstaller**:
-
----
-
 # Meu Projeto GUI
 
 Um projeto Python com interface gráfica, desenvolvido com **PySide6**, utilizando uma arquitetura modular que separa **lógica** e **interface gráfica**.  
