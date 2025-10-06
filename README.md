@@ -2,7 +2,6 @@ Perfeito, Gabriel! Aqui está um **README completo, pronto para GitHub**, docume
 
 ---
 
-```markdown
 # Meu Projeto GUI
 
 Um projeto Python com interface gráfica, desenvolvido com **PySide6**, utilizando uma arquitetura modular que separa **lógica** e **interface gráfica**.  
@@ -19,7 +18,7 @@ meu_projeto/
 ├── logica.py             # Funções e lógica do programa
 └── interfaceGrafica.py   # Interface gráfica (PySide6)
 
-````
+```
 
 ---
 
@@ -99,30 +98,3 @@ pyinstaller --onefile --noconsole --icon="icone.ico" --name="MeuApp" app.py
 ```
 
 ---
-
-## 🧠 Conceito de Deploy
-
-Deploy significa colocar o software em produção ou disponibilizar para uso real, neste caso **gerando um executável que roda sem precisar de Python ou bibliotecas externas**.
-
----
-
-## 📜 Licença
-
-MIT License – uso livre, modificação e distribuição permitidos.
-
----
-
-## ✨ Autor
-
-**Gabriel Luzzi**
-Estudante de Engenharia de Computação 👨‍💻
-Apaixonado por programação, eletrônica e projetos embarcados.
-
-```
-
----
-
-Se você quiser, posso **fazer uma versão ainda mais “visual”**, com **badges de tecnologias**, **exemplo de screenshot da GUI** e **comandos destacados**, pronta pra deixar o GitHub profissional.  
-
-Quer que eu faça essa versão?
-```
