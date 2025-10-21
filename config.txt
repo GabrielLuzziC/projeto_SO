@@ -1,0 +1,11 @@
+FIFO;3
+T1;gray;0;5;2;
+T2;blue;2;3;1;
+T3;green;4;4;3;
+T4;yellow;4;4;3;
+T5;darkgray;4;4;3;
+T6;darkblue;4;4;3;
+T7;purple;4;4;3;
+T8;violet;4;4;3;
+T9;darkgreen;4;4;3;
+T10;brown;4;4;3;
