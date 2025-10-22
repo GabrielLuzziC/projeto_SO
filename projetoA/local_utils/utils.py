@@ -1,3 +1,6 @@
+from core.fifo import SchedulerFIFO
+from core.strf import SchedulerSTRF
+from core.prio import SchedulerPRIO
 '''
     Função que retorna o conteúdo de config.txt
 '''
@@ -22,3 +25,21 @@ def load_config(arquivo):
         })
 
     return algoritmo, quantum, tarefas
+
+'''
+    Função que cria escalonador a partir do algoritmo dado
+'''
+def create_scheduler(algorithm, tasks, quantum):
+    algorithm = algorithm.upper()
+
+    types = {
+        "FIFO": SchedulerFIFO,
+        "STRF": SchedulerSTRF,
+        "PRIO": SchedulerPRIO,
+    }
+
+    if algorithm not in types:
+        raise ValueError(f"Tipo de escalonador desconhecido: {algorithm}")
+    
+    # Cria e retorna o objeto
+    return types[algorithm](tasks, quantum)

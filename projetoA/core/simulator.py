@@ -1,0 +1,14 @@
+class Simulator:
+    def __init__(self, scheduler, total_duration=0):
+        
+        self.scheduler = scheduler
+        self.total_duration = total_duration
+        self.tick = 0
+    
+    def advance(self):
+        if self.tick >= self.total_duration:
+            return False
+        
+        exec_task = self.scheduler.tick(self.tick)
+        self.tick += 1
+        return exec_task

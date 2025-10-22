@@ -1,0 +1,2 @@
+class SchedulerSTRF:
+    pass

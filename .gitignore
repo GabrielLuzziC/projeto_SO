@@ -15,3 +15,7 @@ env.bak/
 venv.bak/
 
 *pycache__
+
+#PyInstaller
+/build
+/dist
