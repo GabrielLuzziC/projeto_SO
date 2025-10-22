@@ -1,6 +1,5 @@
 class Simulator:
-    def __init__(self, scheduler, total_duration=0):
-        
+    def __init__(self, scheduler, total_duration=0):   
         self.scheduler = scheduler
         self.total_duration = total_duration
         self.tick = 0
@@ -12,3 +11,7 @@ class Simulator:
         exec_task = self.scheduler.tick(self.tick)
         self.tick += 1
         return exec_task
+    
+    def restart_tick(self):
+        print("passei")
+        self.tick = 0

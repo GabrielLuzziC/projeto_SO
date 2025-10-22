@@ -1,3 +1,4 @@
-class SchedulerPRIO:
+from core.scheduler import Scheduler
+class SchedulerPRIO(Scheduler):
     def __init__(self, tasks, quantum):
-        pass
+        super().__init__(tasks, quantum)

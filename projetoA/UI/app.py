@@ -10,9 +10,9 @@ class App:
         self.app = QApplication(sys.argv)
         # Lê arquivo de configuração base
         algorithm, quantum, tasks = load_config("projetoA/config.txt")
-        # Cria o scheduler a paritr do 
+        # Cria o scheduler a partir do algoritmo selecionado no config.txt
         scheduler = create_scheduler(algorithm, tasks, quantum)
-        simulator = Simulator(scheduler, total_duration=10)
+        simulator = Simulator(scheduler, total_duration=30)
         self.window = MainWindow(simulator, tasks)
 
     def execute(self):

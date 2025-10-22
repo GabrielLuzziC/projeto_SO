@@ -5,6 +5,14 @@ from core.prio import SchedulerPRIO
     Função que retorna o conteúdo de config.txt
 '''
 
+cores = {
+    "red": "#E0323C",
+    "blue": "#316AD0",
+    "violet": "#9650CB",
+    "green": "#4BDA3D",
+    "yellow": "#E4E32B",
+}
+
 def load_config(arquivo):
     with open(arquivo, "r") as f:
         linhas = [linha.strip() for linha in f if linha.strip()]
@@ -15,6 +23,9 @@ def load_config(arquivo):
     tarefas = []
     for linha in linhas[1:]:
         id, cor, ingresso, duracao, prioridade, *eventos = linha.split(";")
+
+        if cor in cores:
+            cor = cores[cor]
         tarefas.append({
             "id": id,
             "cor": cor,
