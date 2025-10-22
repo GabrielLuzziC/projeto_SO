@@ -4,10 +4,10 @@ from UI.gantt_chart import GanttChart
 from UI.status_tasks import StatusTask
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, simulator, tasks):
         super().__init__()
-        #self.simulador = simulator
-        #self.tasks = tasks
+        self.simulator = simulator
+        self.tasks = tasks
 
         self.setWindowTitle("Simulador de Escalonamento")
         self.setMinimumSize(1200, 720)
