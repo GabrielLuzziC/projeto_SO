@@ -4,12 +4,12 @@ class Simulator:
         self.total_duration = total_duration
         self.tick = 0
     
-    def advance(self):
+    def advance(self, dt = 1):
         if self.tick >= self.total_duration:
             return False
         
-        exec_task = self.scheduler.tick(self.tick)
-        self.tick += 1
+        exec_task = self.scheduler.tick(dt)
+        self.tick += dt
         return exec_task
     
     def restart_tick(self):

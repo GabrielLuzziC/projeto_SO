@@ -1,5 +1,5 @@
 from core.fifo import SchedulerFIFO
-from core.strf import SchedulerSTRF
+from core.srtf import SchedulerSRTF
 from core.prio import SchedulerPRIO
 '''
     Função que retorna o conteúdo de config.txt
@@ -33,6 +33,7 @@ def load_config(arquivo):
             "duracao": int(duracao),
             "prioridade": int(prioridade),
             "eventos": eventos if eventos else [],
+            "executado": 0,
         })
 
     return algoritmo, quantum, tarefas
@@ -45,7 +46,7 @@ def create_scheduler(algorithm, tasks, quantum):
 
     types = {
         "FIFO": SchedulerFIFO,
-        "STRF": SchedulerSTRF,
+        "SRTF": SchedulerSRTF,
         "PRIO": SchedulerPRIO,
     }
 

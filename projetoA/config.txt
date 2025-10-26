@@ -1,6 +1,8 @@
-FIFO;3
+SRTF;3
 T1;red;0;5;2;
 T2;blue;2;3;1;
 T3;green;4;4;3;
 T4;yellow;4;4;3;
-T5;violet;4;4;3;
+T5;violet;4;2;3;
+T6;black;6;1;5;
+T7;white;9;2;8;
