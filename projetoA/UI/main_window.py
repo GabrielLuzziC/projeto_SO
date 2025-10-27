@@ -56,16 +56,23 @@ class MainWindow(QMainWindow):
         self.timer.stop()
 
     def restart(self):
-        self.gantt.scene.clear()
+        if self.timer.isActive():
+            self.timer.stop()
+
         self.simulator.restart_tick()
+        self.gantt.scene.clear()
+        self.status.update(self.simulator.tick, None)
+        
 
     def full_exec(self):
         self.timer.stop()
         while self.next_tick():
             pass
+        self.status.update(self.simulator.tick, None)
 
     def tick(self):
         if not self.next_tick():
+            self.status.update(self.simulator.tick, None)
             self.timer.stop()
 
     def next_tick(self):
@@ -73,5 +80,5 @@ class MainWindow(QMainWindow):
         if task_exec is None:
             return False
         self.gantt.draw(self.simulator.tick - 1, task_exec)
-        self.status.update(self.simulator.tick - 1, task_exec)
+        self.status.update(self.simulator.tick, task_exec)
         return True

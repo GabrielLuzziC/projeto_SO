@@ -10,7 +10,6 @@ class SchedulerSRTF(Scheduler):
             t["executado"] = 0
             t["concluida"] = False
 
-    
     def tick(self, dt):
 
         self.time_elapsed += dt

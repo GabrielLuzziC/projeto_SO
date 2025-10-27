@@ -8,10 +8,10 @@ class Simulator:
         if self.tick >= self.total_duration:
             return False
         
-        exec_task = self.scheduler.tick(dt)
         self.tick += dt
+        exec_task = self.scheduler.tick(dt)
         return exec_task
     
     def restart_tick(self):
-        print("passei")
         self.tick = 0
+        self.scheduler.reset()

@@ -16,16 +16,14 @@ class StatusTask(QWidget):
     def update(self, tick, tasks_exec):
         self.list.clear()
         for t in self.tasks:
-            init = t["ingresso"]
-            end = t["ingresso"] + t["duracao"]
 
             if t.get("concluida", False):
                 state = "Concluída"
-            elif tick < init:
+            elif t["ingresso"] > tick:
                 state = "Inativa"
-            elif init <= tick < end:
-                state = "Executando" if t["id"] == tasks_exec else "Pronta"
+            elif t["id"] == tasks_exec:
+                state = "Executando"   
             else:
-                state = "Concluída"
+                state = "Pronta"
 
             self.list.addItem(f"{t['id']}: {state}")
