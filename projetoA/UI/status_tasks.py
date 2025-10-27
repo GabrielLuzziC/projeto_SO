@@ -12,7 +12,6 @@ class StatusTask(QWidget):
         layout.addWidget(self.list)
         self.setLayout(layout)
 
-    # TODO Rever - lógica meio errada
     def update(self, tick, tasks_exec):
         self.list.clear()
         for t in self.tasks:

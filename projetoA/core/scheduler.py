@@ -7,6 +7,7 @@ class Scheduler(ABC):
         self.tasks = tasks
         self.quantum = quantum
         self.time_elapsed = 0
+        self.quantum_used = 0
 
     @abstractmethod
     def tick(self, dt):
@@ -18,4 +19,6 @@ class Scheduler(ABC):
             t["concluida"] = False
         self.time_elapsed = 0
         self.current_task = None
+        self.quantum_used = 0
+        self.queue = sorted(self.tasks, key=lambda t: t["ingresso"])
 
