@@ -18,11 +18,11 @@ class StatusTask(QWidget):
 
             if t.get("concluida", False):
                 state = "Concluída"
-            elif t["ingresso"] > tick:
-                state = "Inativa"
             elif t["id"] == tasks_exec:
-                state = "Executando"   
-            else:
+                state = "Executando"
+            elif t["ingresso"] <= tick:
                 state = "Pronta"
+            else:
+                state = "Inativa"
 
             self.list.addItem(f"{t['id']}: {state}")

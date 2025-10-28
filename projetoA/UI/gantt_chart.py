@@ -40,6 +40,15 @@ class GanttChart(QWidget):
                     20,
                     brush=QBrush(QColor(t["cor"]))
                 )
+            elif t["ingresso"] <= tick and t["executado"] < t["duracao"]:
+                self.scene.addRect(
+                    tick * self.width_tick,
+                    i * self.height_row,
+                    self.width_tick,
+                    20,
+                    brush=QBrush(QColor("gray"))
+                )
+
     # TODO Rever - talvez adicionar um botão para salvar gráfico
     def export_SVG(self):
         file_path, _ = QFileDialog.getSaveFileName(

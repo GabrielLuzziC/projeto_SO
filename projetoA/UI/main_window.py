@@ -80,5 +80,5 @@ class MainWindow(QMainWindow):
         if task_exec is None:
             return False
         self.gantt.draw(self.simulator.tick - 1, task_exec)
-        self.status.update(self.simulator.tick, task_exec)
+        self.status.update(self.simulator.tick - 1, task_exec)
         return True
