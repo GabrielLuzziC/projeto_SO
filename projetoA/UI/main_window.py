@@ -12,9 +12,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Simulador de Escalonamento")
         self.setMinimumSize(1200, 720)
 
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.tick)
-
         # Widgets
         self.gantt = GanttChart(self.tasks)
         self.status = StatusTask(self.tasks)
@@ -26,7 +23,7 @@ class MainWindow(QMainWindow):
         btn_restart = QPushButton("Reiniciar")
         btn_full = QPushButton("Executar Completo")
 
-        btn_init.clicked.connect(self.init)
+        btn_init.clicked.connect(self.simulator.init)
         btn_stop.clicked.connect(self.step)
         btn_restart.clicked.connect(self.restart)
         btn_full.clicked.connect(self.full_exec)
@@ -48,33 +45,43 @@ class MainWindow(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
-    def init(self):
+    '''
+        Função que inicializa as tarefas, caso houver novas configurações
+    '''
+    def init(self) -> None:
         self.gantt.draw_tasks()
+        self.status.update(self.simulator.tick, None)
         text = self.status.getText()
         if text is not None:
             print(text)
-            
-
-    def step(self):
+    
+    '''
+        Função que chama chama o próximo passo
+    '''
+    def step(self) -> None:
         self.next_tick()
 
-    def restart(self):
+    '''
+        Função que reinicia o escalonador
+    '''
+    def restart(self) -> None:
         self.simulator.restart_tick()
         self.gantt.scene.clear()
         self.status.clear_status()
 
-    def full_exec(self):
+    '''
+        Função que executa completo o escalonador
+    '''
+    def full_exec(self) -> None:
         self.gantt.draw_tasks()
         while self.next_tick():
             pass
         self.status.update(self.simulator.tick, None)
 
-    def tick(self):
-        if not self.next_tick():
-            self.status.update(self.simulator.tick, None)
-            self.timer.stop()
-
-    def next_tick(self):
+    '''
+        Função que chama o próximo tick do simulador e atualiza interface gráfica
+    '''
+    def next_tick(self) -> bool:
         task_exec = self.simulator.advance()
         if task_exec is None:
             return False

@@ -18,7 +18,10 @@ class StatusTask(QWidget):
 
         self.setLayout(layout)
 
-    def update(self, tick, tasks_exec):
+    '''
+        Função que atualiza a lista de situação das tarefas a cada tick
+    '''
+    def update(self, tick, tasks_exec) -> None:
         self.list.clear()
 
         # Mapa de cores por estado
@@ -29,7 +32,8 @@ class StatusTask(QWidget):
             "Inativa": "#9E9E9E",     # cinza
         }
 
-        for t in self.tasks:
+        # Verifica cada tarefa, e de acordo com a sua situação atual, exibe a cor na lista 
+        for t in reversed(self.tasks):
             if t.get("concluida", False):
                 state = "Concluída"
             elif t["id"] == tasks_exec:
@@ -51,8 +55,14 @@ class StatusTask(QWidget):
                 
             self.list.addItem(item)
 
+    '''
+        Função que retorna o texto (configurações) recebido na caixa de texto
+    '''
     def getText(self) -> str:
         return self.text.toPlainText()
     
-    def clear_status(self):
+    '''
+        Função que limpa a lista da situação das tarefas
+    '''
+    def clear_status(self) -> None:
         self.list.clear()
