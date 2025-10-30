@@ -22,12 +22,12 @@ class MainWindow(QMainWindow):
         # Botões
         buttons = QHBoxLayout()
         btn_init = QPushButton("Iniciar")
-        btn_stop = QPushButton("Pausar")
+        btn_stop = QPushButton("Próximo Passo")
         btn_restart = QPushButton("Reiniciar")
         btn_full = QPushButton("Executar Completo")
 
         btn_init.clicked.connect(self.init)
-        btn_stop.clicked.connect(self.stop)
+        btn_stop.clicked.connect(self.step)
         btn_restart.clicked.connect(self.restart)
         btn_full.clicked.connect(self.full_exec)
 
@@ -49,23 +49,22 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def init(self):
-        # Inicia o timer com tick a cada 1 segundo
-        self.timer.start(500)
+        self.gantt.draw_tasks()
+        text = self.status.getText()
+        if text is not None:
+            print(text)
+            
 
-    def stop(self):
-        self.timer.stop()
+    def step(self):
+        self.next_tick()
 
     def restart(self):
-        if self.timer.isActive():
-            self.timer.stop()
-
         self.simulator.restart_tick()
         self.gantt.scene.clear()
-        self.status.update(self.simulator.tick, None)
-        
+        self.status.clear_status()
 
     def full_exec(self):
-        self.timer.stop()
+        self.gantt.draw_tasks()
         while self.next_tick():
             pass
         self.status.update(self.simulator.tick, None)
@@ -80,5 +79,6 @@ class MainWindow(QMainWindow):
         if task_exec is None:
             return False
         self.gantt.draw(self.simulator.tick - 1, task_exec)
+        self.gantt.draw_axis()
         self.status.update(self.simulator.tick - 1, task_exec)
         return True

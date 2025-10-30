@@ -1,9 +1,9 @@
-SRTF;2
+PRIO;2
 T1;red;0;5;2;
 T2;blue;2;3;1;
 T3;green;4;4;3;
 T4;yellow;4;4;3;
 T5;violet;4;4;3;
-T6;black;6;1;5;
-T7;white;9;2;8;
+T6;cyan;6;1;5;
+T7;purple;9;2;8;
 T8;orange;0;3;3
