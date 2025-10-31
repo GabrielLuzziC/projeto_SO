@@ -32,6 +32,9 @@ class GanttChart(QWidget):
         self.width_tick = WIDTH_TICK
         self.max_tick = 0
 
+    def set_tasks(self, tasks):
+        self.tasks = tasks
+        
     def draw_tasks(self):
         # Escreve nome das tarefas (eixo Y)
         font = QFont("Arial", 10)
@@ -90,15 +93,6 @@ class GanttChart(QWidget):
             text = self.scene.addText(str(tick), font)
             text.setDefaultTextColor(QColor("black"))
             text.setPos(x + self.width_tick / 4, y_base + 8)
-
-            # Grade vertical
-            #if tick > 0:
-            #    self.scene.addLine(x, -10, x, y_base, pen_grid)
-
-        # # Linhas horizontais (grade entre tarefas)
-        # for i in range(num_tasks + 1):
-        #     y = i * self.height_row
-        #     self.scene.addLine(0, y, x_end, y, pen_grid)
 
     def export_SVG(self):
         file_path, _ = QFileDialog.getSaveFileName(

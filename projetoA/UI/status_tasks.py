@@ -55,14 +55,13 @@ class StatusTask(QWidget):
                 
             self.list.addItem(item)
 
-    '''
-        Função que retorna o texto (configurações) recebido na caixa de texto
-    '''
+    def set_tasks(self, tasks):
+        self.tasks = tasks
+
     def getText(self) -> str:
+        ''' Função que retorna o texto (configurações) recebido na caixa de texto '''
         return self.text.toPlainText()
     
-    '''
-        Função que limpa a lista da situação das tarefas
-    '''
     def clear_status(self) -> None:
+        ''' Função que limpa a lista da situação das tarefas '''
         self.list.clear()
