@@ -77,7 +77,9 @@ class MainWindow(QMainWindow):
             self.status.update(tick - 1, exec_task)
         else:
             self.gantt.draw_tasks()
-            self.status.update(tick, None)
+            self.gantt.draw(tick - 1, exec_task)
+            self.gantt.draw_axis()
+            self.status.update(tick - 1, None)
 
     def on_finished(self):
         """Chamado quando a simulação termina."""

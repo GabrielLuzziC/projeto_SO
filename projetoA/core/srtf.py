@@ -12,8 +12,6 @@ class SchedulerSRTF(Scheduler):
 
     def tick(self, dt):
 
-        self.time_elapsed += dt
-
         if self.current_task:
             self.current_task["executado"] += dt
             self.quantum_used += dt
@@ -40,5 +38,6 @@ class SchedulerSRTF(Scheduler):
                 next_task = min(candidates, key=lambda t: t["ingresso"])
                 self.current_task = next_task
 
+        self.time_elapsed += dt
 
         return self.current_task["id"] if self.current_task else None

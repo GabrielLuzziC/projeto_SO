@@ -57,14 +57,17 @@ class Simulator:
     def step(self, dt=1):
         """Executa um passo (tick manual)."""
         exec_task = self.scheduler.tick(dt)
-        if exec_task is None:
-            if self._on_finish:
-                self._on_finish()
-            return False
 
         self.tick += dt
         if self._on_tick:
             self._on_tick(self.tick, exec_task)
+
+        tasks_finished = all(t.get("concluida", False) for t in self.tasks)
+        if tasks_finished:
+            if self._on_finish:
+                self._on_finish()
+            return False
+        
         return True
 
     def restart(self):

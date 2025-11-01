@@ -13,8 +13,6 @@ class SchedulerPRIO(Scheduler):
     
     def tick(self, dt):
 
-        self.time_elapsed += dt
-
         if self.current_task:
             self.current_task["executado"] += dt
             self.quantum_used += dt
@@ -40,6 +38,7 @@ class SchedulerPRIO(Scheduler):
                 candidates = [t for t in available_tasks if t["prioridade"] == max_priority]
                 next_task = min(candidates, key=lambda t: (t["ingresso"], t["id"]))
                 self.current_task = next_task
-
+        
+        self.time_elapsed += dt
 
         return self.current_task["id"] if self.current_task else None
