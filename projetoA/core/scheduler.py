@@ -2,23 +2,23 @@ from abc import ABC, abstractmethod
 ''' 
     Classe abstrata que define a interface escalonador
 '''
-class Scheduler(ABC):
+class Scheduler(ABC): 
     def __init__(self, tasks, quantum: int):
         self.tasks = tasks
         self.quantum = quantum
         self.time_elapsed = 0
         self.quantum_used = 0
 
-    @abstractmethod
-    def tick(self, dt):
+    @abstractmethod 
+    def tick(self, dt): 
         pass
 
-    def reset (self):
+    def reset (self): # Reinicia o estado do escalonador (quando o usuário clica em reiniciar)
         for t in self.tasks:
             t["executado"] = 0
             t["concluida"] = False
         self.time_elapsed = 0
         self.current_task = None
         self.quantum_used = 0
-        self.queue = sorted(self.tasks, key=lambda t: t["ingresso"])
+        self.queue = sorted(self.tasks, key=lambda t: t["ingresso"]) # Recria a fila de tarefas ordenada pelo tempo de ingresso
 
