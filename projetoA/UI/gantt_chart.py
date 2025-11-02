@@ -15,7 +15,7 @@ class GanttChart(QWidget):
         # Cria cena e visualização
         self.scene = QGraphicsScene()
         self.view = QGraphicsView(self.scene)
-        self.view.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        self.view.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
         # Fundo estilo
         self.scene.setBackgroundBrush(QBrush(QColor("white")))
@@ -36,7 +36,7 @@ class GanttChart(QWidget):
         self.tasks = tasks
         
     def draw_tasks(self):
-        # Escreve nome das tarefas (eixo Y)
+        """ Escreve nome das tarefas (eixo Y) """
         font = QFont("Arial", 10)
         for i, t in enumerate(reversed(self.tasks)):
             label = self.scene.addText(t["id"], font)
@@ -44,12 +44,12 @@ class GanttChart(QWidget):
             label.setPos(-45, i * self.height_row + 5)
 
     def draw(self, tick, task_exec):
-        """Desenha as barras de execução."""
+        """ Desenha as barras de execução """
         for i, t in enumerate(reversed(self.tasks)):
             if t["id"] == task_exec:
                 color = QColor(t["cor"])
             elif t["ingresso"] <= tick and t["executado"] < t["duracao"]:
-                color = QColor("gray")
+                color = QColor("lightgray")
             else:
                 continue
 
@@ -64,7 +64,7 @@ class GanttChart(QWidget):
         self.max_tick = max(self.max_tick, tick)
 
     def draw_axis(self):
-        """Desenha os eixos, ticks e grade."""
+        """ Desenha os eixos, ticks e grade """
         pen_axis = QPen(QColor("black"))
         pen_axis.setWidth(2)
 
@@ -113,7 +113,7 @@ class GanttChart(QWidget):
         generator.setFileName(file_path)
 
         scene_rect = self.scene.itemsBoundingRect()
-        scene_rect.adjust(-MARGIN, -MARGIN, MARGIN, MARGIN)
+        scene_rect.adjust(-MARGIN, -MARGIN, MARGIN*3, MARGIN*2)
 
         generator.setSize(scene_rect.size().toSize())
         generator.setViewBox(QRectF(scene_rect))

@@ -4,7 +4,7 @@ class Simulator:
         self.scheduler = None
         self.tasks = []
         self.tick = 0
-        self._on_tick = None
+        self._on_tick = None  # faz callback com a função update_view do Main_Window
         self._on_finish = None
 
     def on_tick(self, callback):
@@ -48,7 +48,7 @@ class Simulator:
         if text:
             alg, quantum, tasks = self.parse_config(text) # Carrega configuração a partir do texto fornecido (parte manual)
         else:
-            alg, quantum, tasks = load_config("projetoA/config.txt") # Carrega configuração a partir do arquivo padrão (caso o usuário não forneça nada)
+            alg, quantum, tasks = load_config("config.txt") # Carrega configuração a partir do arquivo padrão (caso o usuário não forneça nada)
 
         scheduler = create_scheduler(alg, tasks, quantum) # Cria o escalonador conforme os dados fornecidos
         self.scheduler = scheduler

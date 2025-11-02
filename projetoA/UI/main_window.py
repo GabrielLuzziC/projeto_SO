@@ -21,16 +21,19 @@ class MainWindow(QMainWindow):
         btn_stop = QPushButton("Próximo Passo")
         btn_restart = QPushButton("Reiniciar")
         btn_full = QPushButton("Executar Completo")
+        btn_save = QPushButton("Salvar Gráfico")
 
         btn_init.clicked.connect(self.config)
         btn_stop.clicked.connect(self.step)
         btn_restart.clicked.connect(self.restart)
         btn_full.clicked.connect(self.full_run)
+        btn_save.clicked.connect(self.save)
 
         buttons.addWidget(btn_init)
         buttons.addWidget(btn_stop)
         buttons.addWidget(btn_restart)
         buttons.addWidget(btn_full)
+        buttons.addWidget(btn_save)
 
         # Layout principal
         layout = QVBoxLayout()
@@ -68,6 +71,9 @@ class MainWindow(QMainWindow):
     def full_run(self):
         self.simulator.full_run()
 
+    def save(self):
+        self.gantt.export_SVG()
+
     def update_view(self, tick, exec_task):
         """Atualiza o gráfico e o painel de status."""
         if exec_task:
@@ -77,7 +83,7 @@ class MainWindow(QMainWindow):
             self.status.update(tick - 1, exec_task)
         else:
             self.gantt.draw_tasks()
-            self.gantt.draw(tick - 1, exec_task)
+            #self.gantt.draw(tick - 1, exec_task)
             self.gantt.draw_axis()
             self.status.update(tick - 1, None)
 
