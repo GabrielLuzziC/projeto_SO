@@ -19,6 +19,3 @@ venv.bak/
 #PyInstaller
 /build
 /dist
-
-#img
-/img
