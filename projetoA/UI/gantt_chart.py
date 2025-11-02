@@ -94,34 +94,46 @@ class GanttChart(QWidget):
             text.setDefaultTextColor(QColor("black"))
             text.setPos(x + self.width_tick / 4, y_base + 8)
 
-    def export_SVG(self):
+    def export_SVG(self, title_text="Gráfico de Gantt"):
+        """ Função qiue exporta o gráfico de gantt em formato .svg"""
         file_path, _ = QFileDialog.getSaveFileName(
             self,
             "Salvar Gráfico",
             "gantt_chart.svg",
             "SVG Files (*.svg)"
         )
-
         if not file_path:
-            return  # Usuário cancelou
-
+            return
         if not file_path.lower().endswith(".svg"):
             file_path += ".svg"
 
-        # Configura o gerador SVG
+        # Adiciona o título na cena
+        title_item = self.scene.addText(title_text, QFont("Arial", 16, QFont.Bold))
+        title_item.setDefaultTextColor(QColor("black"))
+
+        # Centraliza horizontalmente em relação à cena
+        scene_rect = self.scene.itemsBoundingRect()
+        x_center = scene_rect.width() / 2 - title_item.boundingRect().width() / 2
+        y_top = -MARGIN  # posiciona acima do gráfico
+        title_item.setPos(x_center, y_top)
+
+        # Ajusta o retângulo da cena incluindo margens
+        scene_rect.adjust(-MARGIN, -MARGIN, MARGIN*3, MARGIN*2)
+        self.scene.setSceneRect(scene_rect)
+
+        # Cria SVG
         generator = QSvgGenerator()
         generator.setFileName(file_path)
-
-        scene_rect = self.scene.itemsBoundingRect()
-        scene_rect.adjust(-MARGIN, -MARGIN, MARGIN*3, MARGIN*2)
-
         generator.setSize(scene_rect.size().toSize())
         generator.setViewBox(QRectF(scene_rect))
-        generator.setTitle("Gráfico de Gantt")
+        generator.setTitle(title_text)
         generator.setDescription("Gráfico de escalonamento gerado pelo simulador")
 
         painter = QPainter(generator)
         self.scene.render(painter, QRectF(), scene_rect)
         painter.end()
+
+        # Opcional: remover o título da cena para não ficar na view normal
+        self.scene.removeItem(title_item)
 
         return file_path
