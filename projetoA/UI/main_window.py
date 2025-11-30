@@ -18,18 +18,21 @@ class MainWindow(QMainWindow):
         # Botões
         buttons = QHBoxLayout()
         btn_init = QPushButton("Carregar Configurações")
+        btn_undo = QPushButton("Desfazer Último Passo")
         btn_stop = QPushButton("Próximo Passo")
         btn_restart = QPushButton("Reiniciar")
         btn_full = QPushButton("Executar Completo")
         btn_save = QPushButton("Salvar Gráfico")
 
         btn_init.clicked.connect(self.config)
+        btn_undo.clicked.connect(self.step_back)
         btn_stop.clicked.connect(self.step)
         btn_restart.clicked.connect(self.restart)
         btn_full.clicked.connect(self.full_run)
         btn_save.clicked.connect(self.save)
 
         buttons.addWidget(btn_init)
+        buttons.addWidget(btn_undo)
         buttons.addWidget(btn_stop)
         buttons.addWidget(btn_restart)
         buttons.addWidget(btn_full)
@@ -58,6 +61,9 @@ class MainWindow(QMainWindow):
         self.status.set_tasks(self.simulator.tasks)
         self.update_view(0, None)
 
+    def step_back(self):
+        self.simulator.step_back()
+
     def step(self):
         self.simulator.step()
 
@@ -74,16 +80,22 @@ class MainWindow(QMainWindow):
     def save(self):
         self.gantt.export_SVG()
 
-    def update_view(self, tick, exec_task):
+    def update_view(self, tick, exec_task, removed=False):
         """Atualiza o gráfico e o painel de status."""
+        
+        self.gantt.draw_tasks()
+
+        if removed:
+            self.gantt.remove_tick(tick)
+            self.gantt.draw_axis()
+            self.status.update(tick, exec_task)
+            return
+
         if exec_task:
-            self.gantt.draw_tasks()
             self.gantt.draw(tick - 1, exec_task)
             self.gantt.draw_axis()
             self.status.update(tick - 1, exec_task)
         else:
-            self.gantt.draw_tasks()
-            #self.gantt.draw(tick - 1, exec_task)
             self.gantt.draw_axis()
             self.status.update(tick - 1, None)
 

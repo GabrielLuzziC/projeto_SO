@@ -31,6 +31,7 @@ class GanttChart(QWidget):
         self.height_row = HEIGHT_ROW
         self.width_tick = WIDTH_TICK
         self.max_tick = 0
+        self.items_by_tick = {}
 
     def set_tasks(self, tasks):
         self.tasks = tasks
@@ -39,21 +40,21 @@ class GanttChart(QWidget):
         """ Escreve nome das tarefas (eixo Y) """
         font = QFont("Arial", 10)
         for i, t in enumerate(reversed(self.tasks)):
-            label = self.scene.addText(t["id"], font)
+            label = self.scene.addText(t.id, font)
             label.setDefaultTextColor(QColor("black"))
             label.setPos(-45, i * self.height_row + 5)
 
     def draw(self, tick, task_exec):
         """ Desenha as barras de execução """
         for i, t in enumerate(reversed(self.tasks)):
-            if t["id"] == task_exec:
-                color = QColor(t["cor"])
-            elif t["ingresso"] <= tick and t["executado"] < t["duracao"]:
+            if t.id == task_exec:
+                color = QColor(t.cor)
+            elif t.ingresso <= tick and t.executado < t.duracao:
                 color = QColor("lightgray")
             else:
                 continue
 
-            self.scene.addRect(
+            rect = self.scene.addRect(
                 tick * self.width_tick,
                 i * self.height_row,
                 self.width_tick,
@@ -61,7 +62,27 @@ class GanttChart(QWidget):
                 brush=QBrush(color)
             )
 
+            # Salva o item no dicionário
+            if tick not in self.items_by_tick:
+                self.items_by_tick[tick] = []
+            self.items_by_tick[tick].append(rect)
+
         self.max_tick = max(self.max_tick, tick)
+    
+    def remove_tick(self, tick):
+        if tick in self.items_by_tick:
+            for item in self.items_by_tick[tick]:
+                try:
+                    
+                    if item is not None and item.scene() is not None:
+                        self.scene.removeItem(item)
+                except RuntimeError:
+                    pass
+            del self.items_by_tick[tick]
+
+        if tick == self.max_tick:
+            self.max_tick = max(self.items_by_tick.keys(), default=0)
+
 
     def draw_axis(self):
         """ Desenha os eixos, ticks e grade """

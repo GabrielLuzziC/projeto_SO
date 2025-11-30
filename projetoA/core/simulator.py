@@ -1,4 +1,5 @@
 from local_utils.utils import create_scheduler, load_config
+from local_utils.tcb import TCB
 class Simulator:
     def __init__(self):
         self.scheduler = None
@@ -33,15 +34,14 @@ class Simulator:
                 # ignorar ou lançar erro conforme desejar
                 continue
             tid, cor, ingresso, duracao, prioridade = parts[:5] # Pega as 5 primeiras partes que vão ser usadas para compor o TCB
-            tarefas.append({ # Cria o TCB da tarefa, no caso do usuário configurar as tarefas manualmente
-                "id": tid,
-                "cor": cor,
-                "ingresso": int(ingresso),
-                "duracao": int(duracao),
-                "prioridade": int(prioridade),
-                "eventos": parts[5:] if len(parts) > 5 else [],
-                "executado": 0,
-            })
+            tarefas.append(TCB(
+                id=tid,
+                cor=cor,
+                ingresso=int(ingresso),
+                duracao=int(duracao),
+                prioridade=int(prioridade),
+                eventos=parts[5:]  # As partes restantes são eventos opcionais
+            ))
         return algoritmo, quantum, tarefas
 
     def config(self, text: str):
@@ -62,7 +62,7 @@ class Simulator:
         if self._on_tick:
             self._on_tick(self.tick, exec_task)
 
-        tasks_finished = all(t.get("concluida", False) for t in self.tasks) # Verifica se todas as tarefas foram concluídas
+        tasks_finished = all(t.concluido for t in self.tasks) # Verifica se todas as tarefas foram concluídas
         if tasks_finished:
             if self._on_finish:
                 self._on_finish()
@@ -70,6 +70,21 @@ class Simulator:
         
         return True
 
+    def step_back(self, dt=1):
+        """Desfaz o último passo (tick manual)."""
+        if not self.scheduler.history:
+            return False
+
+        self.scheduler.undo()
+        self.tick -= dt
+
+        current = self.scheduler.current_task.id if self.scheduler.current_task else None
+
+        if self._on_tick:
+            self._on_tick(self.tick, current, removed = True)
+
+        return True
+    
     def restart(self):
         """Reinicia o escalonador e o contador de tempo."""
         self.tick = 0

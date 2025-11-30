@@ -34,16 +34,16 @@ class StatusTask(QWidget):
 
         # Verifica cada tarefa, e de acordo com a sua situação atual, exibe a cor na lista 
         for t in reversed(self.tasks):
-            if t.get("concluida", False):
+            if t.concluido:
                 state = "Concluída"
-            elif t["id"] == tasks_exec:
+            elif t.id == tasks_exec:
                 state = "Executando"
-            elif t["ingresso"] <= tick:
+            elif t.ingresso <= tick:
                 state = "Pronta"
             else:
                 state = "Inativa"
 
-            item = QListWidgetItem(f"{t['id']}: {state}")
+            item = QListWidgetItem(f"{t.id}: {state}")
             color = state_colors.get(state)
 
             item.setForeground(QBrush(QColor(color)))

@@ -1,6 +1,7 @@
 from core.fifo import SchedulerFIFO
 from core.srtf import SchedulerSRTF
 from core.prio import SchedulerPRIO
+from .tcb import TCB
 '''
     Função que retorna o conteúdo de config.txt
 '''
@@ -26,15 +27,14 @@ def load_config(arquivo):
 
         if cor in cores:
             cor = cores[cor]
-        tarefas.append({
-            "id": id,
-            "cor": cor,
-            "ingresso": int(ingresso),
-            "duracao": int(duracao),
-            "prioridade": int(prioridade),
-            "eventos": eventos if eventos else [],
-            "executado": 0,
-        })
+        tarefas.append(TCB(
+            id = id,
+            cor = cor,
+            ingresso = int(ingresso),
+            duracao = int(duracao),
+            prioridade = int(prioridade),
+            eventos = eventos if eventos else []
+        ))
 
     return algoritmo, quantum, tarefas
 
