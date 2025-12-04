@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget
 from UI.gantt_chart import GanttChart
 from UI.status_tasks import StatusTask
+from UI.config_window import ConfigWindow
 from core.simulator import Simulator
 
 class MainWindow(QMainWindow):
@@ -17,21 +18,21 @@ class MainWindow(QMainWindow):
 
         # Botões
         buttons = QHBoxLayout()
-        btn_init = QPushButton("Carregar Configurações")
+        btn_config = QPushButton("Carregar Configurações")
         btn_undo = QPushButton("Desfazer Último Passo")
         btn_stop = QPushButton("Próximo Passo")
         btn_restart = QPushButton("Reiniciar")
         btn_full = QPushButton("Executar Completo")
         btn_save = QPushButton("Salvar Gráfico")
 
-        btn_init.clicked.connect(self.config)
+        btn_config.clicked.connect(self.config)
         btn_undo.clicked.connect(self.step_back)
         btn_stop.clicked.connect(self.step)
         btn_restart.clicked.connect(self.restart)
         btn_full.clicked.connect(self.full_run)
         btn_save.clicked.connect(self.save)
 
-        buttons.addWidget(btn_init)
+        buttons.addWidget(btn_config)
         buttons.addWidget(btn_undo)
         buttons.addWidget(btn_stop)
         buttons.addWidget(btn_restart)
@@ -55,7 +56,12 @@ class MainWindow(QMainWindow):
         self.simulator.on_finish(self.on_finished)
 
     def config(self):
-        self.simulator.config(self.status.getText())
+        dialog = ConfigWindow(self)
+
+        if dialog.exec():
+            text = dialog.get_config()
+
+        self.simulator.config(text)
         self.restart()
         self.gantt.set_tasks(self.simulator.tasks)
         self.status.set_tasks(self.simulator.tasks)
