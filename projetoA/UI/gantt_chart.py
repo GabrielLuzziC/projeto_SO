@@ -17,6 +17,9 @@ class GanttChart(QWidget):
         self.view = QGraphicsView(self.scene)
         self.view.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
+        # Lista para guardar os itens do eixo
+        self.axis_items = []
+
         # Fundo estilo
         self.scene.setBackgroundBrush(QBrush(QColor("white")))
 
@@ -85,7 +88,9 @@ class GanttChart(QWidget):
 
 
     def draw_axis(self):
-        """ Desenha os eixos, ticks e grade """
+        # limpa eixos antigos para evitar duplicações
+        self.clear_axis()
+
         pen_axis = QPen(QColor("black"))
         pen_axis.setWidth(2)
 
@@ -97,23 +102,35 @@ class GanttChart(QWidget):
         x_end = (self.max_tick + 1) * self.width_tick
 
         # Eixo X
-        self.scene.addLine(0, y_base, x_end, y_base, pen_axis)
+        linha_x = self.scene.addLine(0, y_base, x_end, y_base, pen_axis)
+        self.axis_items.append(linha_x)
 
-        # Eixo Y (esquerda)
-        self.scene.addLine(0, -10, 0, y_base, pen_axis)
+        # Eixo Y
+        linha_y = self.scene.addLine(0, -10, 0, y_base, pen_axis)
+        self.axis_items.append(linha_y)
 
         font = QFont("Arial", 8)
 
-        # Ticks e grade vertical
         for tick in range(self.max_tick + 1):
             x = tick * self.width_tick
-            # Tick principal
-            self.scene.addLine(x, y_base - 5, x, y_base + 5, pen_axis)
 
-            # Rótulo numérico
+            tick_item = self.scene.addLine(x, y_base - 5, x, y_base + 5, pen_axis)
+            self.axis_items.append(tick_item)
+
             text = self.scene.addText(str(tick), font)
             text.setDefaultTextColor(QColor("black"))
             text.setPos(x + self.width_tick / 4, y_base + 8)
+            self.axis_items.append(text)
+
+    def clear_axis(self):
+        for item in self.axis_items:
+            try:
+                if item is not None and item.scene() is not None:
+                    self.scene.removeItem(item)
+            except RuntimeError:
+                pass
+
+        self.axis_items.clear()
 
     def export_SVG(self, title_text="Gráfico de Gantt"):
         """ Função qiue exporta o gráfico de gantt em formato .svg"""
