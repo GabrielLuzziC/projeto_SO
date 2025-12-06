@@ -84,7 +84,8 @@ class MainWindow(QMainWindow):
         self.simulator.full_run()
 
     def save(self):
-        self.gantt.export_SVG()
+        title = "Gráfico de Gantt - " + self.simulator.scheduler.get_name()
+        self.gantt.export_SVG(title)
 
     def update_view(self, tick, exec_task, removed=False):
         """Atualiza o gráfico e o painel de status."""

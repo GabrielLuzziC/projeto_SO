@@ -58,3 +58,13 @@ def create_scheduler(algorithm, tasks, quantum, alpha):
     
     # Cria e retorna o objeto
     return types[algorithm](tasks, quantum, alpha)
+
+def get_name(scheduler):
+    types = {
+        "SchedulerFIFO": "FIFO",
+        "SchedulerSRTF": "STRF",
+        "SchedulerPRIOP": "PRIOP",
+        "SchedulerPRIOENV": "PRIOENV",
+    }
+
+    return types[scheduler]

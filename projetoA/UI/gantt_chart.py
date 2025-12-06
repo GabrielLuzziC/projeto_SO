@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QGraphicsScene, QGraphicsVie
 from PySide6.QtGui import QColor, QBrush, QPainter, QPen, QFont
 from PySide6.QtCore import Qt, QRectF, QPointF
 from PySide6.QtSvg import QSvgGenerator
+from core.scheduler import Scheduler
 
 MARGIN = 60
 HEIGHT_ROW = 40
@@ -51,7 +52,8 @@ class GanttChart(QWidget):
         """ Desenha as barras de execução """
         for i, t in enumerate(reversed(self.tasks)):
             if t.id == task_exec:
-                color = QColor(t.cor)
+                color = "#" + t.cor
+                print(color)
             elif t.ingresso <= tick and t.executado < t.duracao:
                 color = QColor("lightgray")
             else:
@@ -132,7 +134,7 @@ class GanttChart(QWidget):
 
         self.axis_items.clear()
 
-    def export_SVG(self, title_text="Gráfico de Gantt"):
+    def export_SVG(self, title_text):
         """ Função qiue exporta o gráfico de gantt em formato .svg"""
         file_path, _ = QFileDialog.getSaveFileName(
             self,

@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
     Classe abstrata que define a interface escalonador
 '''
 class Scheduler(ABC): 
+    name = "Scheduler"
+
     def __init__(self, tasks, quantum: int, alpha: int):
         self.tasks = tasks
         self.quantum = quantum
@@ -18,6 +20,9 @@ class Scheduler(ABC):
     @abstractmethod
     def pass_time(self, dt):
         pass
+
+    def get_name(self):
+        return self.name
 
     # Métodos para logging do estado do escalonador antes e depois de cada tick
     def _create_log_before(self):

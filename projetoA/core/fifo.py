@@ -1,5 +1,6 @@
 from core.scheduler import Scheduler
 class SchedulerFIFO(Scheduler):
+    name = "FIFO"
     def __init__(self, tasks, quantum, alpha):
         super().__init__(tasks, quantum, alpha)
         self.queue = sorted(tasks, key=lambda t: t.ingresso) # As tarefas são colocadas na fila pelo tempo de ingresso

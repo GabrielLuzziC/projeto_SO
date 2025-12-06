@@ -1,6 +1,8 @@
 from core.scheduler import Scheduler
 
 class SchedulerPRIOENV(Scheduler):
+    name = "Prioridade Envelhecimento"
+    
     def __init__(self, tasks, quantum, alpha):
         super().__init__(tasks, quantum, alpha)
         self.queue = sorted(tasks, key=lambda t: t.ingresso)
