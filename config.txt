@@ -1,4 +1,4 @@
-PRIOENV;10;1
+PRIOPEnv;10;1
 T1;red;0;5;2;
 T2;blue;2;3;1;
 T3;green;4;4;3;

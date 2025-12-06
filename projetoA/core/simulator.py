@@ -16,43 +16,9 @@ class Simulator:
         """Define uma função chamada quando a simulação termina."""
         self._on_finish = callback
 
-    def parse_config(self, text: str):
-        lines = [ln.strip() for ln in text.splitlines()] # Divide em linhas e remove espaços em branco
-        lines = [ln for ln in lines if ln and not ln.startswith("//") and not ln.startswith("#")] # Remove linhas vazias e comentários
-
-        if not lines:
-            raise ValueError("config vazio")
-
-        header = lines[0].split(";") # Primeira linha: algoritmo;quantum
-        if len(header) < 2:
-            raise ValueError("A primeira linha do arquivo de configuração deve conter pelo menos o algoritmo e o quantum.")
-        
-        algoritmo = header[0] 
-        quantum = int(header[1]) if len(header) > 1 and header[1].isdigit() else 0 # Define quantum como 0 se não for fornecido
-        alpha = int(header[2]) if len(header) > 2 and header[2].isdigit() else 0 # Define alpha como 0 se não for fornecido
-
-        tarefas = []
-        for ln in lines[1:]: # As demais linhas são as tarefas
-            parts = [p for p in ln.split(";") if p != ""] # Divide por ; e remove partes vazias
-            if len(parts) < 5: # Verifica se há pelo menos as 5 partes obrigatórias que definem o TCB da tarefa
-                # ignorar ou lançar erro conforme desejar
-                continue
-            tid, cor, ingresso, duracao, prioridade = parts[:5] # Pega as 5 primeiras partes que vão ser usadas para compor o TCB
-            tarefas.append(TCB(
-                id=tid,
-                cor=cor,
-                ingresso=int(ingresso),
-                duracao=int(duracao),
-                prioridade=int(prioridade),
-                eventos=parts[5:]  # As partes restantes são eventos opcionais
-            ))
-        return algoritmo, quantum, alpha, tarefas
-
     def config(self, text: str):
         if text:
-            alg, quantum, alpha, tasks = self.parse_config(text) # Carrega configuração a partir do texto fornecido (parte manual)
-        else:
-            alg, quantum, alpha, tasks = load_config("config.txt") # Carrega configuração a partir do arquivo padrão (caso o usuário não forneça nada)
+            alg, quantum, alpha, tasks = load_config(text) # Carrega configuração a partir do arquivo padrão (caso o usuário não forneça nada)
 
         scheduler = create_scheduler(alg, tasks, quantum, alpha) # Cria o escalonador conforme os dados fornecidos
         self.scheduler = scheduler
