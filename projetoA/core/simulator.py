@@ -60,7 +60,17 @@ class Simulator:
 
     def step(self, dt=1):
         """Executa um passo (tick manual)."""
-        exec_task = self.scheduler.tick(dt)
+
+        next_task = False
+        for t in self.tasks:
+            if not t.concluido and t.ingresso == self.tick:
+                next_task = True
+                break
+
+        if (next_task or (self.scheduler.current_task.executado + dt >= self.scheduler.current_task.duracao if self.scheduler.current_task else False) or (self.scheduler.quantum_used + dt >= self.scheduler.quantum)) :
+            exec_task = self.scheduler.tick(dt)
+        else:
+            exec_task = self.scheduler.pass_time(dt)
 
         self.tick += dt
         if self._on_tick:

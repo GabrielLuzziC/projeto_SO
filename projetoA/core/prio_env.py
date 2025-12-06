@@ -13,6 +13,19 @@ class SchedulerPRIOENV(Scheduler):
             t.concluido = False
             t.prioridade_dinamica = t.prioridade  # Inicializa a prioridade dinâmica
 
+    def pass_time(self, dt):
+        """Avança o tempo sem executar nenhuma tarefa."""
+        log = self._create_log_before()
+        if self.current_task:
+            self.current_task.executado += dt
+            self.quantum_used += dt
+
+        self.time_elapsed += dt
+
+        self._finalize_log_after(log)
+
+        return self.current_task.id if self.current_task else None
+    
     def _apply_aging(self):
         """Calcula e atualiza a prioridade dinâmica de todas as tarefas disponíveis."""
         for t in self.queue:
@@ -28,9 +41,6 @@ class SchedulerPRIOENV(Scheduler):
     def tick(self, dt):
 
         log = self._create_log_before()
-        
-        # Variável auxiliar para rastrear se a tarefa atual será removida
-        task_removed = False
 
         if self.current_task:
             self.current_task.executado += dt
@@ -40,12 +50,10 @@ class SchedulerPRIOENV(Scheduler):
                 self.current_task.concluido = True
                 self.current_task = None
                 self.quantum_used = 0
-                task_removed = True
 
             elif self.quantum_used >= self.quantum:
                 self.quantum_used = 0
                 self.current_task = None
-                task_removed = True
 
         available_tasks = [t for t in self.queue if not t.concluido and t.ingresso <= self.time_elapsed]
 
@@ -56,24 +64,13 @@ class SchedulerPRIOENV(Scheduler):
 
             next_task = min(candidates, key=lambda t: (t.ingresso, t.id))
 
-            for t in self.queue:
-                if (t.ingresso == self.time_elapsed and not t.concluido) and task_removed == False:
-                    task_removed = True
-
-            if self.current_task is None or (self.current_task.prioridade_dinamica < max_prio_dinamica and task_removed) :
+            if self.current_task is None or self.current_task.prioridade_dinamica < max_prio_dinamica  :
                 self.current_task = next_task
 
         self.time_elapsed += dt
-
-        for t in self.queue:
-            if (t.ingresso == self.time_elapsed - 1 and not t.concluido) and task_removed == False:
-                task_removed = True
                 
-        if task_removed:
-            self._apply_aging()
-            print ("Aging applied at time:", self.time_elapsed)
-            task_removed = False
-
+        self._apply_aging()
+            
         self._finalize_log_after(log)
 
         return self.current_task.id if self.current_task else None

@@ -15,6 +15,10 @@ class Scheduler(ABC):
     def tick(self, dt): 
         pass
 
+    @abstractmethod
+    def pass_time(self, dt):
+        pass
+
     # Métodos para logging do estado do escalonador antes e depois de cada tick
     def _create_log_before(self):
         log = {

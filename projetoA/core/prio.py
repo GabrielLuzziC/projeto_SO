@@ -10,6 +10,19 @@ class SchedulerPRIOP(Scheduler):
             t.executado = 0
             t.concluido = False
     
+    def pass_time(self, dt):
+        """Avança o tempo sem executar nenhuma tarefa."""
+        log = self._create_log_before()
+        if self.current_task:
+            self.current_task.executado += dt
+            self.quantum_used += dt
+
+        self.time_elapsed += dt
+
+        self._finalize_log_after(log)
+
+        return self.current_task.id if self.current_task else None
+    
     def tick(self, dt):
 
         # Cria o log do estado antes de executar o tick
