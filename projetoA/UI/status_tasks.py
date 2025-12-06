@@ -58,7 +58,7 @@ class StatusTask(QWidget):
             # Texto organizado
             texto = (
                 f"{t.id} — {state}\n"
-                f"Chegada: {t.ingresso}  |  Prioridade: {t.prioridade}\n"
+                f"Chegada: {t.ingresso}  |  Prioridade: {t.prioridade_dinamica}\n"
                 f"Duração: {t.duracao}  |  Restante: "" "
             )
 

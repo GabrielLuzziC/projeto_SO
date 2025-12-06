@@ -3,9 +3,10 @@ from abc import ABC, abstractmethod
     Classe abstrata que define a interface escalonador
 '''
 class Scheduler(ABC): 
-    def __init__(self, tasks, quantum: int):
+    def __init__(self, tasks, quantum: int, alpha: int):
         self.tasks = tasks
         self.quantum = quantum
+        self.alpha = alpha
         self.time_elapsed = 0
         self.quantum_used = 0
         self.history = []
@@ -21,7 +22,7 @@ class Scheduler(ABC):
             "quantum_before": self.quantum_used,
             "queue_before": list(self.queue),
             "current_before": self.current_task.id if self.current_task else None,
-            "tasks_before": {t.id: (t.executado, t.concluido) for t in self.tasks},
+            "tasks_before": {t.id: (t.executado, t.concluido, t.prioridade_dinamica) for t in self.tasks},
         }
         return log
 
@@ -31,7 +32,7 @@ class Scheduler(ABC):
             "quantum_after": self.quantum_used,
             "queue_after": list(self.queue),
             "current_after": self.current_task.id if self.current_task else None,
-            "tasks_after": {t.id: (t.executado, t.concluido) for t in self.tasks},
+            "tasks_after": {t.id: (t.executado, t.concluido, t.prioridade_dinamica) for t in self.tasks},
         })
         self.history.append(log)
 
@@ -48,7 +49,7 @@ class Scheduler(ABC):
 
         before_tasks = log["tasks_before"]
         for t in self.tasks:
-            t.executado, t.concluido = before_tasks[t.id]
+            t.executado, t.concluido, t.prioridade_dinamica = before_tasks[t.id]
 
         prev = log["current_before"]
         if prev is None:
@@ -60,6 +61,7 @@ class Scheduler(ABC):
         for t in self.tasks:
             t.executado = 0
             t.concluido = False
+            t.prioridade_dinamica = t.prioridade
         self.time_elapsed = 0
         self.current_task = None
         self.quantum_used = 0

@@ -24,8 +24,12 @@ class Simulator:
             raise ValueError("config vazio")
 
         header = lines[0].split(";") # Primeira linha: algoritmo;quantum
+        if len(header) < 2:
+            raise ValueError("A primeira linha do arquivo de configuração deve conter pelo menos o algoritmo e o quantum.")
+        
         algoritmo = header[0] 
         quantum = int(header[1]) if len(header) > 1 and header[1].isdigit() else 0 # Define quantum como 0 se não for fornecido
+        alpha = int(header[2]) if len(header) > 2 and header[2].isdigit() else 0 # Define alpha como 0 se não for fornecido
 
         tarefas = []
         for ln in lines[1:]: # As demais linhas são as tarefas
@@ -42,15 +46,15 @@ class Simulator:
                 prioridade=int(prioridade),
                 eventos=parts[5:]  # As partes restantes são eventos opcionais
             ))
-        return algoritmo, quantum, tarefas
+        return algoritmo, quantum, alpha, tarefas
 
     def config(self, text: str):
         if text:
-            alg, quantum, tasks = self.parse_config(text) # Carrega configuração a partir do texto fornecido (parte manual)
+            alg, quantum, alpha, tasks = self.parse_config(text) # Carrega configuração a partir do texto fornecido (parte manual)
         else:
-            alg, quantum, tasks = load_config("config.txt") # Carrega configuração a partir do arquivo padrão (caso o usuário não forneça nada)
+            alg, quantum, alpha, tasks = load_config("config.txt") # Carrega configuração a partir do arquivo padrão (caso o usuário não forneça nada)
 
-        scheduler = create_scheduler(alg, tasks, quantum) # Cria o escalonador conforme os dados fornecidos
+        scheduler = create_scheduler(alg, tasks, quantum, alpha) # Cria o escalonador conforme os dados fornecidos
         self.scheduler = scheduler
         self.tasks = tasks
 

@@ -8,6 +8,7 @@ class TCB:
         self.eventos = eventos if eventos else []
         self.executado = 0
         self.concluido = False
+        self.prioridade_dinamica = prioridade
 
 
     

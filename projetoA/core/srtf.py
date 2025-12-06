@@ -1,7 +1,7 @@
 from core.scheduler import Scheduler
 class SchedulerSRTF(Scheduler):
-    def __init__(self, tasks, quantum):
-        super().__init__(tasks, quantum)
+    def __init__(self, tasks, quantum, alpha):
+        super().__init__(tasks, quantum, alpha)
         self.queue = sorted(tasks, key=lambda t: t.ingresso)
         self.current_task = None
         self.time_elapsed = 0

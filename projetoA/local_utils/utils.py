@@ -1,6 +1,7 @@
 from core.fifo import SchedulerFIFO
 from core.srtf import SchedulerSRTF
-from core.prio import SchedulerPRIO
+from core.prio import SchedulerPRIOP
+from core.prio_env import SchedulerPRIOENV
 from .tcb import TCB
 '''
     Função que retorna o conteúdo de config.txt
@@ -18,8 +19,9 @@ def load_config(arquivo):
     with open(arquivo, "r") as f:
         linhas = [linha.strip() for linha in f if linha.strip()]
 
-    algoritmo, quantum = linhas[0].split(";")
+    algoritmo, quantum, alpha = linhas[0].split(";")
     quantum = int(quantum)
+    alpha = int(alpha)
 
     tarefas = []
     for linha in linhas[1:]:
@@ -36,22 +38,23 @@ def load_config(arquivo):
             eventos = eventos if eventos else []
         ))
 
-    return algoritmo, quantum, tarefas
+    return algoritmo, quantum, alpha, tarefas
 
 '''
     Função que cria escalonador a partir do algoritmo dado
 '''
-def create_scheduler(algorithm, tasks, quantum):
+def create_scheduler(algorithm, tasks, quantum, alpha):
     algorithm = algorithm.upper()
 
     types = {
         "FIFO": SchedulerFIFO,
         "SRTF": SchedulerSRTF,
-        "PRIO": SchedulerPRIO,
+        "PRIOP": SchedulerPRIOP,
+        "PRIOENV": SchedulerPRIOENV,
     }
 
     if algorithm not in types:
         raise ValueError(f"Tipo de escalonador desconhecido: {algorithm}")
     
     # Cria e retorna o objeto
-    return types[algorithm](tasks, quantum)
+    return types[algorithm](tasks, quantum, alpha)
