@@ -53,8 +53,10 @@ class GanttChart(QWidget):
         for i, t in enumerate(reversed(self.tasks)):
             if t.id == task_exec:
                 color = "#" + t.cor
-            elif t.ingresso <= tick and t.executado < t.duracao:
+            elif t.ingresso <= tick and t.executado < t.duracao and not t.bloqueada:
                 color = QColor("lightgray")
+            elif t.bloqueada:
+                color = QColor("gray")
             else:
                 continue
 

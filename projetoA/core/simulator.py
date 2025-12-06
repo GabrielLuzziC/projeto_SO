@@ -33,7 +33,8 @@ class Simulator:
                 next_task = True
                 break
 
-        if (next_task or (self.scheduler.current_task.executado + dt >= self.scheduler.current_task.duracao if self.scheduler.current_task else False) or (self.scheduler.quantum_used + dt >= self.scheduler.quantum)) :
+        if (next_task or (self.scheduler.current_task.executado + dt >= self.scheduler.current_task.duracao if self.scheduler.current_task else False) or 
+            (self.scheduler.quantum_used + dt >= self.scheduler.quantum) or self.scheduler.current_task.executado in self.scheduler.current_task.eventos_io) :
             exec_task = self.scheduler.tick(dt)
         else:
             exec_task = self.scheduler.pass_time(dt)

@@ -13,7 +13,9 @@ class SchedulerPRIOENV(Scheduler):
         for t in self.queue:
             t.executado = 0
             t.concluido = False
+            t.bloqueada = False
             t.prioridade_dinamica = t.prioridade  # Inicializa a prioridade dinâmica
+
 
     def pass_time(self, dt):
         """Avança o tempo sem executar nenhuma tarefa."""
@@ -41,8 +43,30 @@ class SchedulerPRIOENV(Scheduler):
                 t.prioridade_dinamica = t.prioridade
 
     def tick(self, dt):
-
         log = self._create_log_before()
+
+        for t in self.queue:
+            if t.bloqueada:
+                t.tempo_restante_io -= dt
+
+                if t.tempo_restante_io <= 0:
+                    t.bloqueada = False
+                    t.tempo_restante_io = 0
+
+        if self.current_task:
+            time_now = self.current_task.executado
+
+            print(self.current_task.tempo_restante_io)
+
+            if time_now in self.current_task.eventos_io:
+                duracao_io = self.current_task.eventos_io[time_now]
+
+                self.current_task.tempo_restante_io = duracao_io
+                self.current_task.bloqueada = True
+
+                # Retira a tarefa 
+                self.current_task = None
+                self.quantum_used = 0
 
         if self.current_task:
             self.current_task.executado += dt
@@ -57,7 +81,9 @@ class SchedulerPRIOENV(Scheduler):
                 self.quantum_used = 0
                 self.current_task = None
 
-        available_tasks = [t for t in self.queue if not t.concluido and t.ingresso <= self.time_elapsed]
+
+        # Escolhe próxima tarefa
+        available_tasks = [t for t in self.queue if not t.concluido and t.ingresso <= self.time_elapsed and not t.bloqueada]
 
         if available_tasks:
             max_prio_dinamica = max(t.prioridade_dinamica for t in available_tasks)
