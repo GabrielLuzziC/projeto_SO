@@ -37,13 +37,18 @@ def load_config(text):
             # ignorar ou lançar erro conforme desejar
             continue
         tid, cor, ingresso, duracao, prioridade = parts[:5] # Pega as 5 primeiras partes que vão ser usadas para compor o TCB
+
+        eventos_list = parts[5:]
+
+        eventos_list = [e.strip() for e in eventos_list if e.strip()]
+
         tarefas.append(TCB(
             id=tid,
             cor=cor,
             ingresso=int(ingresso),
             duracao=int(duracao),
             prioridade=int(prioridade),
-            eventos=parts[5:]  # As partes restantes são eventos opcionais
+            eventos=eventos_list  # As partes restantes são eventos opcionais
         ))
     return algoritmo, quantum, alpha, tarefas
 

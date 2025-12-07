@@ -31,6 +31,7 @@ class Mutex:
         """
         if self.fila_espera:
             proxima_tarefa = self.fila_espera.popleft()
+            self.ocupado = True
             self.dono_id = proxima_tarefa.id
             return proxima_tarefa # Essa tarefa deve voltar para PRONTO
         else:

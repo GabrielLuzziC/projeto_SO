@@ -142,8 +142,15 @@ class ConfigWindow(QDialog):
             data = line.split(";")
             row = self.table.rowCount()
             self.table.insertRow(row)
-            for i, v in enumerate(data):
-                self.table.setItem(row, i, QTableWidgetItem(v))
+            for i in range(5):
+                self.table.setItem(row, i, QTableWidgetItem(data[i]))
+            
+            # O sexto item é a coluna 'Eventos' (índice 5)
+            if len(data) > 5:
+                eventos_string = ";".join(data[5:]) # Junta os múltiplos eventos com o ;
+                self.table.setItem(row, 5, QTableWidgetItem(eventos_string))
+            else:
+                self.table.setItem(row, 5, QTableWidgetItem(""))
 
     def get_config(self):
         # Cabeçalho
