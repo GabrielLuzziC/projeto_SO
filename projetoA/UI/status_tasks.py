@@ -59,7 +59,7 @@ class StatusTask(QWidget):
             texto = (
                 f"{t.id} — {state}\n"
                 f"Chegada: {t.ingresso}  |  Prioridade: {t.prioridade_dinamica}\n"
-                f"Duração: {t.duracao}  |  Restante: "" "
+                f"Duração: {t.duracao}  |  Restante: {t.duracao - t.executado} "
             )
 
             item = QListWidgetItem(texto)
