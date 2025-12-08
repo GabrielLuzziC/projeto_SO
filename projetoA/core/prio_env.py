@@ -1,5 +1,6 @@
 from core.scheduler import Scheduler
 from core.mutex import Mutex
+import random
 
 class SchedulerPRIOENV(Scheduler):
     name = "Prioridade Envelhecimento"
@@ -9,8 +10,7 @@ class SchedulerPRIOENV(Scheduler):
         self.queue = sorted(tasks, key=lambda t: t.ingresso)
         self.current_task = None
         self.time_elapsed = 0
-        self.must_recalculate_prio = False # Flag para indicar se o envelhecimento deve ocorrer
-
+       
         for t in self.queue:
             t.executado = 0
             t.concluido = False
@@ -61,13 +61,15 @@ class SchedulerPRIOENV(Scheduler):
 
         self._manage_blocked_tasks(dt)
 
+        # Tratamento I/O
         if self.current_task:
             time_now = self.current_task.executado
 
-            print(self.current_task.tempo_restante_io)
-
+            # Verifica se tem algum evento de IO agendado para o tempo atual
             if time_now in self.current_task.eventos_io:
                 duracao_io = self.current_task.eventos_io[time_now]
+
+                print(f"[I/O] Tarefa {self.current_task.id} solicitou I/O em t={time_now}")
 
                 self.current_task.tempo_restante_io = duracao_io
                 self.current_task.bloqueada = True
@@ -170,18 +172,37 @@ class SchedulerPRIOENV(Scheduler):
 
         # Escolhe próxima tarefa
         available_tasks = [t for t in self.queue if not t.concluido and t.ingresso <= self.time_elapsed and not t.bloqueada]
+        best_candidate = self.current_task # Padrão: mantém o atual se nada mudar
 
         if available_tasks:
-            max_prio_dinamica = max(t.prioridade_dinamica for t in available_tasks)
+            max_prio = max(t.prioridade_dinamica for t in available_tasks)
+            candidates = [t for t in available_tasks if t.prioridade_dinamica == max_prio]
+            
+            # Critérios de desempate (Ordem de prioridade):
+            # 1. Prio Estática | 2. Tarefa Atual | 3. Ingresso (FIFO) | 4. Duração | 5. Sorteio
+            best_candidate = max(candidates, key=lambda t: (
+                t.prioridade,
+                1 if t == self.current_task else 0,
+                -t.ingresso,
+                -t.duracao,
+                random.random()
+            ))
 
-            candidates = [t for t in available_tasks if t.prioridade_dinamica == max_prio_dinamica]
+        # Troca de Contexto / Preempção
+        if best_candidate != self.current_task:
+            
+            # Se havia alguém rodando, reseta sua prioridade ao sair
+            if self.current_task is not None:
+                self.current_task.prioridade_dinamica = self.current_task.prioridade
+            
+            self.current_task = best_candidate
+            self.quantum_used = 0
+            
+            # Ao assumir a CPU, a tarefa reseta a prioridade dinâmica
+            if self.current_task:
+                self.current_task.prioridade_dinamica = self.current_task.prioridade
+            print(f"[SCHEDULER DEBUG] Troca de Tarefa: {self.current_task.id if self.current_task else 'Nenhuma'} -> {best_candidate.id}. Tempo Global={self.time_elapsed + dt}.")
 
-            next_task = min(candidates, key=lambda t: (t.ingresso, t.id))
-
-            if self.current_task is None or self.current_task.prioridade_dinamica < max_prio_dinamica  :
-                if next_task != self.current_task:
-                    print(f"[SCHEDULER DEBUG] Troca de Tarefa: {self.current_task.id if self.current_task else 'Nenhuma'} -> {next_task.id}. Tempo Global={self.time_elapsed + dt}.")
-                self.current_task = next_task
 
         self.time_elapsed += dt
                 
