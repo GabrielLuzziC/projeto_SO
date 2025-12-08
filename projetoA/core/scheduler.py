@@ -111,6 +111,7 @@ class Scheduler(ABC):
         for t in self.tasks:
             if t.bloqueada and t.tempo_restante_io > 0:
                 t.tempo_restante_io -= dt
+                print(f"[IO] tarefa: {t.id} | tempo restante IO: {t.tempo_restante_io}")
                 
                 if t.tempo_restante_io <= 0:
                     t.bloqueada = False

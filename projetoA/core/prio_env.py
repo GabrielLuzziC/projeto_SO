@@ -17,6 +17,8 @@ class SchedulerPRIOENV(Scheduler):
             t.bloqueada = False
             t.prioridade_dinamica = t.prioridade  # Inicializa a prioridade dinâmica
 
+            t.eventos_io_processados = set()
+
         self.mutex_gerenciador = {} 
         
         all_mutex_ids = set()
@@ -61,13 +63,18 @@ class SchedulerPRIOENV(Scheduler):
 
         self._manage_blocked_tasks(dt)
 
+        
+
         # Tratamento I/O
         if self.current_task:
             time_now = self.current_task.executado
+            print(f"Tarefa {self.current_task.id} solicitou I/O em t={self.current_task.executado}")
 
             # Verifica se tem algum evento de IO agendado para o tempo atual
-            if time_now in self.current_task.eventos_io:
+            if (time_now in self.current_task.eventos_io and time_now not in self.current_task.eventos_io_processados):
                 duracao_io = self.current_task.eventos_io[time_now]
+
+                self.current_task.eventos_io_processados.add(time_now)
 
                 print(f"[I/O] Tarefa {self.current_task.id} solicitou I/O em t={time_now}")
 
