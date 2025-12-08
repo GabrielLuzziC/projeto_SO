@@ -40,7 +40,7 @@ class Simulator:
             tid, cor, ingresso, duracao, prioridade = parts[:5] # Pega as 5 primeiras partes que vão ser usadas para compor o TCB
             tarefas.append(TCB(
                 id=tid,
-                cor=cor,
+                cor="#"+cor,
                 ingresso=int(ingresso),
                 duracao=int(duracao),
                 prioridade=int(prioridade),

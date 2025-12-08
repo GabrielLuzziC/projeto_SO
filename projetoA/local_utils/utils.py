@@ -50,7 +50,7 @@ def create_scheduler(algorithm, tasks, quantum, alpha):
         "FIFO": SchedulerFIFO,
         "SRTF": SchedulerSRTF,
         "PRIOP": SchedulerPRIOP,
-        "PRIOENV": SchedulerPRIOENV,
+        "PRIOPENV": SchedulerPRIOENV,
     }
 
     if algorithm not in types:

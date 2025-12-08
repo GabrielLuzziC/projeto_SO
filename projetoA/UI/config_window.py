@@ -18,7 +18,7 @@ class ConfigWindow(QDialog):
         top = QHBoxLayout()
 
         self.cmb_algo = QComboBox()
-        self.cmb_algo.addItems(["FIFO", "SRTF", "PRIOP", "PRIOENV"])
+        self.cmb_algo.addItems(["FIFO", "SRTF", "PRIOP", "PRIOPEnv"])
 
         self.spin_quantum = QSpinBox()
         self.spin_quantum.setMinimum(1)
